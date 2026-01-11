@@ -30,17 +30,26 @@ public class JwtService {
     }
 
     public List<GrantedAuthority> extractRoles(String token) {
+
         Claims claims = Jwts.parser()
                 .verifyWith((SecretKey) getSignKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
 
-        List<String> roles = claims.get("roles", List.class);
+        String scope = claims.get("scope", String.class);
+        if (scope != null) {
+            return List.of(new SimpleGrantedAuthority("SCOPE_" + scope));
+        }
 
-        return roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        List<String> roles = claims.get("roles", List.class);
+        if (roles != null) {
+            return roles.stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
+        }
+
+        return List.of();
     }
 
     public String extractUsername(String token) {

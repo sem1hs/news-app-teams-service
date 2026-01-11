@@ -61,4 +61,8 @@ public class TeamService {
         Team league = teamRepository.findById(id).orElseThrow(() -> new TeamNotFoundException("Lig bulunamadı " + id));
         teamRepository.delete(league);
     }
+
+    public Boolean existsById(Long id) {
+        return teamRepository.existsById(id);
+    }
 }

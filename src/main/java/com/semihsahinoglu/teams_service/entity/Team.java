@@ -6,13 +6,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Table(name = "teams")
+@DynamicUpdate
 public class Team extends Auditable {
 
     @NotBlank(message = "Takım ismi boş olamaz !")
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @NotBlank(message = "Takım kısaltması boş olamaz !")
@@ -88,5 +90,21 @@ public class Team extends Auditable {
 
     public Long getLeagueId() {
         return leagueId;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
+
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = logoUrl;
+    }
+
+    public void setLeagueId(Long leagueId) {
+        this.leagueId = leagueId;
     }
 }

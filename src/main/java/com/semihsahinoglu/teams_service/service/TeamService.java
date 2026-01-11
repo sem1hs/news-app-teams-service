@@ -3,7 +3,9 @@ package com.semihsahinoglu.teams_service.service;
 import com.semihsahinoglu.teams_service.client.LeagueClient;
 import com.semihsahinoglu.teams_service.dto.TeamCreateRequest;
 import com.semihsahinoglu.teams_service.dto.TeamResponse;
+import com.semihsahinoglu.teams_service.dto.TeamUpdateRequest;
 import com.semihsahinoglu.teams_service.entity.Team;
+import com.semihsahinoglu.teams_service.exception.TeamAlreadyExistsException;
 import com.semihsahinoglu.teams_service.exception.TeamNotFoundException;
 import com.semihsahinoglu.teams_service.mapper.TeamMapper;
 import com.semihsahinoglu.teams_service.repository.TeamRepository;
@@ -43,7 +45,20 @@ public class TeamService {
 
     public TeamResponse create(TeamCreateRequest teamCreateRequest) {
         Team team = teamMapper.toEntity(teamCreateRequest);
+        if (teamRepository.existsTeamByName(team.getName())) throw new TeamAlreadyExistsException("Takım Zaten Eklenmiş " + team.getName());
         Team savedTeam = teamRepository.save(team);
         return teamMapper.toDto(savedTeam);
+    }
+
+    public TeamResponse update(Long id, TeamUpdateRequest teamUpdateRequest) {
+        Team league = teamRepository.findById(id).orElseThrow(() -> new TeamNotFoundException("Lig bulunamadı " + id));
+        teamMapper.updateEntity(league, teamUpdateRequest);
+        Team updatedLeague = teamRepository.save(league);
+        return teamMapper.toDto(updatedLeague);
+    }
+
+    public void delete(Long id) {
+        Team league = teamRepository.findById(id).orElseThrow(() -> new TeamNotFoundException("Lig bulunamadı " + id));
+        teamRepository.delete(league);
     }
 }

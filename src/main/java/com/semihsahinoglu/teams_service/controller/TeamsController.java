@@ -2,6 +2,7 @@ package com.semihsahinoglu.teams_service.controller;
 
 import com.semihsahinoglu.teams_service.dto.TeamCreateRequest;
 import com.semihsahinoglu.teams_service.dto.TeamResponse;
+import com.semihsahinoglu.teams_service.dto.TeamUpdateRequest;
 import com.semihsahinoglu.teams_service.service.TeamService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -26,17 +27,27 @@ public class TeamsController {
         return ResponseEntity.status(HttpStatus.OK).body(teams);
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<TeamResponse> getTeamById(@PathVariable Long id) {
         TeamResponse team = teamService.getById(id);
         return ResponseEntity.status(HttpStatus.OK).body(team);
     }
 
-
     @PostMapping
     public ResponseEntity<TeamResponse> createTeam(@Valid @RequestBody TeamCreateRequest request) {
         TeamResponse team = teamService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(team);
+    }
+
+    @PatchMapping("/{id}")
+    ResponseEntity<TeamResponse> update(@PathVariable Long id, @RequestBody TeamUpdateRequest teamUpdateRequest) {
+        TeamResponse teamResponse = teamService.update(id, teamUpdateRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(teamResponse);
+    }
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<?> delete(@PathVariable Long id) {
+        teamService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 }

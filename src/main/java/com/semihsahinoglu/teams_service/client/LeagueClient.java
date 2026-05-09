@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface LeagueClient {
 
     @GetMapping("/internal/league/{id}/exists")
-    Boolean existsById(@PathVariable("id") Long id);
+    Boolean existsById(@PathVariable Long id);
 
     @GetMapping("/internal/league/country/{country}")
-    LeagueResponse getLeagueByCountry(@PathVariable("country") String country, @RequestParam(defaultValue = "2025") int season);
+    LeagueResponse getLeagueByCountry(@PathVariable String country, @RequestParam(defaultValue = "2025") int season);
+
+    @GetMapping("/internal/league/external/{id}")
+    LeagueResponse getLeagueByCountry(@PathVariable Long id, @RequestParam(defaultValue = "2025") int season);
 }

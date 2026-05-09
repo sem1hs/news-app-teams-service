@@ -4,12 +4,16 @@ import com.semihsahinoglu.teams_service.client.FootballTeamApiClient;
 import com.semihsahinoglu.teams_service.client.LeagueClient;
 import com.semihsahinoglu.teams_service.dto.api.ApiFootballTeamDto;
 import com.semihsahinoglu.teams_service.dto.api.ApiFootballTeamResponse;
+import com.semihsahinoglu.teams_service.dto.api.ApiFootballTeamWrapper;
 import com.semihsahinoglu.teams_service.dto.feign.LeagueResponse;
 import com.semihsahinoglu.teams_service.entity.Team;
 import com.semihsahinoglu.teams_service.exception.TeamNotFoundException;
 import com.semihsahinoglu.teams_service.mapper.TeamMapper;
 import com.semihsahinoglu.teams_service.repository.TeamRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class TeamSyncService {
@@ -26,7 +30,6 @@ public class TeamSyncService {
         this.teamMapper = teamMapper;
     }
 
-
     public Team syncTeam(Long externalId) {
         ApiFootballTeamResponse response = footballTeamApiClient.getTeam(externalId);
 
@@ -41,5 +44,30 @@ public class TeamSyncService {
         LeagueResponse league = leagueClient.getLeagueByCountry(apiTeam.country(), 2025);
         Team team = teamMapper.toEntity(apiTeam, league);
         return teamRepository.save(team);
+    }
+
+    public List<Team> syncTeamsByLeague(Long leagueExternalId, int season) {
+
+        ApiFootballTeamResponse response = footballTeamApiClient.getTeamsByLeague(leagueExternalId, season);
+
+        if (response == null || response.response() == null || response.response().isEmpty())
+            throw new TeamNotFoundException("Takımlar bulunamadı");
+
+
+        LeagueResponse league = leagueClient.getLeagueByExternalId(leagueExternalId);
+
+        List<Team> teams = new ArrayList<>();
+
+        for (ApiFootballTeamWrapper wrapper : response.response()) {
+
+            ApiFootballTeamDto apiTeam = wrapper.team();
+
+            Team team = teamMapper.toEntity(apiTeam, league);
+            Team savedTeam = teamRepository.save(team);
+
+            teams.add(savedTeam);
+        }
+
+        return teams;
     }
 }

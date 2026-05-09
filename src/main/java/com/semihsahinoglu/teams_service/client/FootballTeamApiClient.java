@@ -29,4 +29,17 @@ public class FootballTeamApiClient {
                 .bodyToMono(ApiFootballTeamResponse.class)
                 .block();
     }
+
+    public ApiFootballTeamResponse getTeamsByLeague(Long leagueExternalId, int season) {
+
+        return footballWebClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/teams")
+                        .queryParam("league", leagueExternalId)
+                        .queryParam("season", season)
+                        .build())
+                .retrieve()
+                .bodyToMono(ApiFootballTeamResponse.class)
+                .block();
+    }
 }

@@ -33,6 +33,12 @@ public class TeamsController {
         return ResponseEntity.status(HttpStatus.OK).body(team);
     }
 
+    @GetMapping("/external/{externalId}")
+    public ResponseEntity<TeamResponse> getTeamByExternalId(@PathVariable Long externalId) {
+        TeamResponse team = teamService.getByExternalId(externalId);
+        return ResponseEntity.status(HttpStatus.OK).body(team);
+    }
+
     @PostMapping
     public ResponseEntity<TeamResponse> createTeam(@Valid @RequestBody TeamCreateRequest request) {
         TeamResponse team = teamService.create(request);

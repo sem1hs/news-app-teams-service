@@ -18,16 +18,23 @@ public class TeamService {
 
     private final TeamRepository teamRepository;
     private final TeamMapper teamMapper;
+    private final TeamSyncService teamSyncService;
     private final LeagueClient leagueClient;
 
-    public TeamService(TeamRepository teamRepository, TeamMapper teamMapper, LeagueClient leagueClient) {
+    public TeamService(TeamRepository teamRepository, TeamMapper teamMapper, TeamSyncService teamSyncService, LeagueClient leagueClient) {
         this.teamRepository = teamRepository;
         this.teamMapper = teamMapper;
+        this.teamSyncService = teamSyncService;
         this.leagueClient = leagueClient;
     }
 
     public TeamResponse getById(Long id) {
         Team team = teamRepository.findById(id).orElseThrow(() -> new TeamNotFoundException("Takım Bulunamadı ! " + id));
+        return teamMapper.toDto(team);
+    }
+
+    public TeamResponse getByExternalId(Long externalId) {
+        Team team = teamRepository.findByExternalId(externalId).orElseGet(() -> teamSyncService.syncTeam(externalId));
         return teamMapper.toDto(team);
     }
 

@@ -28,14 +28,18 @@ public class Team extends Auditable {
     @Column(name = "league_id", nullable = false)
     private Long leagueId;
 
+    @Column(name = "external_id", unique = true, nullable = false)
+    private Long externalId;
+
     protected Team() {
     }
 
-    public Team(String name, String shortName, String logoUrl, Long leagueId) {
+    public Team(String name, String shortName, String logoUrl, Long leagueId, Long externalId) {
         this.name = name;
         this.shortName = shortName;
         this.logoUrl = logoUrl;
         this.leagueId = leagueId;
+        this.externalId = externalId;
     }
 
     public static Builder builder() {
@@ -47,6 +51,7 @@ public class Team extends Auditable {
         private String shortName;
         private String logoUrl;
         private Long leagueId;
+        private Long externalId;
 
         private Builder() {
         }
@@ -71,8 +76,13 @@ public class Team extends Auditable {
             return this;
         }
 
+        public Builder externalId(Long externalId) {
+            this.externalId = externalId;
+            return this;
+        }
+
         public Team build() {
-            return new Team(name, shortName, logoUrl, leagueId);
+            return new Team(name, shortName, logoUrl, leagueId, externalId);
         }
     }
 
@@ -92,6 +102,10 @@ public class Team extends Auditable {
         return leagueId;
     }
 
+    public Long getExternalId() {
+        return externalId;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -106,5 +120,9 @@ public class Team extends Auditable {
 
     public void setLeagueId(Long leagueId) {
         this.leagueId = leagueId;
+    }
+
+    public void setExternalId(Long externalId) {
+        this.externalId = externalId;
     }
 }

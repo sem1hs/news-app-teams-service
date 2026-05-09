@@ -3,6 +3,8 @@ package com.semihsahinoglu.teams_service.mapper;
 import com.semihsahinoglu.teams_service.dto.TeamCreateRequest;
 import com.semihsahinoglu.teams_service.dto.TeamResponse;
 import com.semihsahinoglu.teams_service.dto.TeamUpdateRequest;
+import com.semihsahinoglu.teams_service.dto.api.ApiFootballTeamDto;
+import com.semihsahinoglu.teams_service.dto.feign.LeagueResponse;
 import com.semihsahinoglu.teams_service.entity.Team;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +17,15 @@ public class TeamMapper {
                 .shortName(dto.shortName())
                 .logoUrl(dto.logoUrl())
                 .leagueId(dto.leagueId())
+                .build();
+    }
+
+    public Team toEntity(ApiFootballTeamDto dto, LeagueResponse league) {
+        return Team.builder()
+                .externalId(dto.getId())
+                .leagueId(league.id())
+                .name(dto.getName())
+                .shortName(dto.getCode())
                 .build();
     }
 

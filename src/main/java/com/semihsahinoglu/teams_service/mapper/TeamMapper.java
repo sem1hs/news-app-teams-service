@@ -22,10 +22,11 @@ public class TeamMapper {
 
     public Team toEntity(ApiFootballTeamDto dto, LeagueResponse league) {
         return Team.builder()
-                .externalId(dto.getId())
+                .externalId(dto.id())
                 .leagueId(league.id())
-                .name(dto.getName())
-                .shortName(dto.getCode())
+                .name(dto.name())
+                .shortName(dto.code())
+                .logoUrl(dto.logo())
                 .build();
     }
 

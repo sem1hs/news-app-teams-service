@@ -30,15 +30,15 @@ public class TeamSyncService {
     public Team syncTeam(Long externalId) {
         ApiFootballTeamResponse response = footballTeamApiClient.getTeam(externalId);
 
-        if (response == null || response.getResponse() == null || response.getResponse().isEmpty())
+        if (response == null || response.response() == null || response.response().isEmpty())
             throw new TeamNotFoundException("Takım bulunamadı : " + externalId);
 
         ApiFootballTeamDto apiTeam = response
-                .getResponse()
+                .response()
                 .getFirst()
-                .getTeam();
+                .team();
 
-        LeagueResponse league = leagueClient.getLeagueByCountry(apiTeam.getCountry(), 2025);
+        LeagueResponse league = leagueClient.getLeagueByCountry(apiTeam.country(), 2025);
         Team team = teamMapper.toEntity(apiTeam, league);
         return teamRepository.save(team);
     }

@@ -17,5 +17,5 @@ public interface LeagueClient {
     LeagueResponse getLeagueByCountry(@PathVariable String country, @RequestParam(defaultValue = "2025") int season);
 
     @GetMapping("/internal/league/external/{id}")
-    LeagueResponse getLeagueByCountry(@PathVariable Long id, @RequestParam(defaultValue = "2025") int season);
+    LeagueResponse getLeagueByExternalId(@PathVariable Long id, @RequestParam(defaultValue = "2025") int season);
 }

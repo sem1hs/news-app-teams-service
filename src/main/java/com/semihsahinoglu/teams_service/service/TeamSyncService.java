@@ -53,8 +53,7 @@ public class TeamSyncService {
         if (response == null || response.response() == null || response.response().isEmpty())
             throw new TeamNotFoundException("Takımlar bulunamadı");
 
-
-        LeagueResponse league = leagueClient.getLeagueByExternalId(leagueExternalId);
+        LeagueResponse league = leagueClient.getLeagueByExternalId(leagueExternalId, 2025);
 
         List<Team> teams = new ArrayList<>();
 

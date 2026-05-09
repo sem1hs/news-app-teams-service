@@ -50,9 +50,17 @@ public class TeamService {
         return teams.stream().map(teamMapper::toDto).toList();
     }
 
+    public List<TeamResponse> bulkTeamsByLeague(Long leagueExternalId, int season) {
+        List<Team> teams = teamSyncService.syncTeamsByLeague(leagueExternalId, season);
+        return teams.stream()
+                .map(teamMapper::toDto)
+                .toList();
+    }
+
     public TeamResponse create(TeamCreateRequest teamCreateRequest) {
         Team team = teamMapper.toEntity(teamCreateRequest);
-        if (teamRepository.existsTeamByName(team.getName())) throw new TeamAlreadyExistsException("Takım Zaten Eklenmiş " + team.getName());
+        if (teamRepository.existsTeamByName(team.getName()))
+            throw new TeamAlreadyExistsException("Takım Zaten Eklenmiş " + team.getName());
         Team savedTeam = teamRepository.save(team);
         return teamMapper.toDto(savedTeam);
     }

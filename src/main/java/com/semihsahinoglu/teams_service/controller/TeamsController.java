@@ -39,6 +39,12 @@ public class TeamsController {
         return ResponseEntity.status(HttpStatus.OK).body(team);
     }
 
+    @GetMapping("/bulk/{leagueExternalId}")
+    public ResponseEntity<List<TeamResponse>> bulkTeamsByLeague(@PathVariable Long leagueExternalId, @RequestParam(defaultValue = "2025") int season) {
+        List<TeamResponse> teams = teamService.bulkTeamsByLeague(leagueExternalId, season);
+        return ResponseEntity.ok(teams);
+    }
+
     @PostMapping
     public ResponseEntity<TeamResponse> createTeam(@Valid @RequestBody TeamCreateRequest request) {
         TeamResponse team = teamService.create(request);

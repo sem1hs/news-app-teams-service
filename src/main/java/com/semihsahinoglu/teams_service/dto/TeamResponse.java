@@ -2,6 +2,7 @@ package com.semihsahinoglu.teams_service.dto;
 
 public record TeamResponse(
         Long id,
+        Long externalId,
         String name,
         String shortName,
         String logoUrl,
@@ -14,6 +15,7 @@ public record TeamResponse(
 
     public static class Builder {
         private Long id;
+        private Long externalId;
         private String name;
         private String shortName;
         private String logoUrl;
@@ -24,6 +26,11 @@ public record TeamResponse(
 
         public Builder id(Long id) {
             this.id = id;
+            return this;
+        }
+
+        public Builder externalId(Long externalId) {
+            this.externalId = externalId;
             return this;
         }
 
@@ -48,7 +55,7 @@ public record TeamResponse(
         }
 
         public TeamResponse build() {
-            return new TeamResponse(id, name, shortName, logoUrl, leagueId);
+            return new TeamResponse(id, externalId, name, shortName, logoUrl, leagueId);
         }
     }
 }

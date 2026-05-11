@@ -33,6 +33,7 @@ public class TeamMapper {
     public TeamResponse toDto(Team team) {
         return TeamResponse.builder()
                 .id(team.getId())
+                .externalId(team.getExternalId())
                 .name(team.getName())
                 .shortName(team.getShortName())
                 .logoUrl(team.getLogoUrl())

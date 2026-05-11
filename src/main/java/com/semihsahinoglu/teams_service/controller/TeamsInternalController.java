@@ -4,10 +4,7 @@ import com.semihsahinoglu.teams_service.dto.TeamResponse;
 import com.semihsahinoglu.teams_service.service.TeamService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/internal/teams")
@@ -29,4 +26,11 @@ public class TeamsInternalController {
         TeamResponse teamResponse = teamService.getById(id);
         return ResponseEntity.status(HttpStatus.OK).body(teamResponse);
     }
+
+    @GetMapping("/external/{id}")
+    public ResponseEntity<TeamResponse> getTeamByExternalId(@PathVariable Long id) {
+        TeamResponse teamResponse = teamService.getByExternalId(id);
+        return ResponseEntity.status(HttpStatus.OK).body(teamResponse);
+    }
+
 }

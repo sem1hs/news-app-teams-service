@@ -10,6 +10,7 @@ import com.semihsahinoglu.teams_service.entity.Team;
 import com.semihsahinoglu.teams_service.exception.TeamNotFoundException;
 import com.semihsahinoglu.teams_service.mapper.TeamMapper;
 import com.semihsahinoglu.teams_service.repository.TeamRepository;
+import com.semihsahinoglu.teams_service.util.WorldCupTeamNameTranslator;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,12 +23,15 @@ public class TeamSyncService {
     private final LeagueClient leagueClient;
     private final TeamRepository teamRepository;
     private final TeamMapper teamMapper;
+    private final WorldCupTeamNameTranslator teamNameTranslator;
 
-    public TeamSyncService(FootballTeamApiClient footballTeamApiClient, LeagueClient leagueClient, TeamRepository teamRepository, TeamMapper teamMapper) {
+
+    public TeamSyncService(FootballTeamApiClient footballTeamApiClient, LeagueClient leagueClient, TeamRepository teamRepository, TeamMapper teamMapper, WorldCupTeamNameTranslator teamNameTranslator) {
         this.footballTeamApiClient = footballTeamApiClient;
         this.leagueClient = leagueClient;
         this.teamRepository = teamRepository;
         this.teamMapper = teamMapper;
+        this.teamNameTranslator = teamNameTranslator;
     }
 
     public Team syncTeam(Long externalId) {
@@ -61,7 +65,14 @@ public class TeamSyncService {
 
             ApiFootballTeamDto apiTeam = wrapper.team();
 
+            String teamName = apiTeam.name();
+            if (leagueExternalId.equals(1L)) {
+                teamName = teamNameTranslator.translate(teamName);
+            }
+
             Team team = teamMapper.toEntity(apiTeam, league);
+            team.setName(teamName);
+
             Team savedTeam = teamRepository.save(team);
 
             teams.add(savedTeam);
